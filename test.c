@@ -4,5 +4,5 @@
 
 int main(void){
   message m; 
-  _syscall(VFS_PROC_NR, 0,&m);
+   say_hello(); 
   }
