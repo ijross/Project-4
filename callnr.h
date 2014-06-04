@@ -59,6 +59,8 @@
 #define SETGROUPS	  66
 #define GETMCONTEXT       67
 #define SETMCONTEXT       68
+#define METAREAD          69
+#define METAWRITE         70
 
 /* Posix signal handling. */
 #define SIGACTION	  71
