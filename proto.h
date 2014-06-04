@@ -169,6 +169,8 @@ _PROTOTYPE( int forbidden, (struct vnode *vp, mode_t access_desired)	);
 _PROTOTYPE( int read_only, (struct vnode *vp)				);
 
 /* read.c */
+_PROTOTYPE( int do_metaread,(void)                              	);
+_PROTOTYPE( int do_metawrite,(void)                                     );
 _PROTOTYPE( int do_read, (void)						);
 _PROTOTYPE( int do_getdents, (void)					);
 _PROTOTYPE( int read_write, (int rw_flag)				);
