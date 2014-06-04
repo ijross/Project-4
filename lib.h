@@ -24,8 +24,8 @@
 #include <minix/ipc.h>
 
 _PROTOTYPE( int say_hello, (void)                                       );
-_PROTOTYPE( int metaread, (void)                                        );
-_PROTOTYPE( int metawrite, (void)                                       );
+_PROTOTYPE( int metaread, (int _fd, void *_buf, size_t _n)              );
+_PROTOTYPE( int metawrite, (int _fd, void *_buf, size_t _n)             );
 
 _PROTOTYPE( int __execve, (const char *_path, char *const _argv[], 
 			char *const _envp[], int _nargs, int _nenvps)	);
