@@ -4,5 +4,7 @@
 
 int main(void){
   message m; 
-   say_hello(); 
+   say_hello();
+   metaread();
+   metawrite(); 
   }

@@ -4,9 +4,15 @@ cp proto.h /usr/src/servers/vfs
 cp misc.c /usr/src/servers/vfs
 cp table.c /usr/src/servers/vfs
 cp _sayhello.c /usr/src/lib/libc/posix
+cp _metaread.c /usr/src/lib/libc/posix
+cp _metawrite.c /usr/src/lib/libc/posix
 cp Makefile.inc /usr/src/lib/libc/posix
 cp lib.h /usr/src/include
 cp callnr.h /usr/src/include/minix
+cp read.c /usr/src/servers/vfs
+
+cd /usr/src/lib/libc
+make install
 
 cd /usr/src/servers
 make install 
