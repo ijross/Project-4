@@ -11,6 +11,7 @@ cp lib.h /usr/src/include
 cp callnr.h /usr/src/include/minix
 cp read.c /usr/src/servers/vfs
 cp write.c /usr/src/servers/mfs
+cp request.c /usr/src/servers/vfs
 
 cd /usr/src/servers
 make install

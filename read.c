@@ -29,6 +29,64 @@
                      do_metaread
 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++=*/
 PUBLIC int do_metaread(void){
+  register struct filp *f;
+  register struct vnode *vp;
+  u64_t position, res_pos, new_pos;
+  unsigned int cum_io, cum_io_incr, res_cum_io;
+  int op, oflags, r, block_spec, char_spec;
+  int regular;
+  mode_t mode_word;
+
+  /* If the file descriptor is valid, get the vnode, size and mode. */
+  if (m_in.nbytes < 0) return(EINVAL);
+  if ((f = get_filp(m_in.fd)) == NULL) return(err_code);
+  /*if (((f->filp_mode) & (rw_flag == READING ? R_BIT : W_BIT)) == 0) {
+        return(f->filp_mode == FILP_CLOSED ? EIO : EBADF);
+  }*/
+  if(m_in.nbytes == 0){
+     printf("Trying to read 0 bytes \n");
+     return(-1);
+  }
+  
+  position = f->filp_pos;
+  oflags = f->filp_flags;
+  vp = f->filp_vno;
+  r = OK;
+  cum_io = 0;
+
+/*  if (vp->v_pipe == I_PIPE) {
+        if (fp->fp_cum_io_partial != 0) {
+                panic("read_write: fp_cum_io_partial not clear");
+        }
+        return rw_pipe(rw_flag, who_e, m_in.fd, f, m_in.buffer, m_in.nbytes);
+  }*/
+
+/*  op = (rw_flag == READING ? VFS_DEV_READ : VFS_DEV_WRITE);*/
+  mode_word = vp->v_mode & I_TYPE;
+  regular = mode_word == I_REGULAR;
+
+  if ((char_spec = (mode_word == I_CHAR_SPECIAL ? 1 : 0))) {
+        if (vp->v_sdev == NO_DEV)
+                panic("read_write tries to read from character device NO_DEV");
+  }
+
+  if ((block_spec = (mode_word == I_BLOCK_SPECIAL ? 1 : 0))) {
+        if (vp->v_sdev == NO_DEV)
+                panic("read_write tries to read from block device NO_DEV");
+  }
+
+  r = req_metaread(vp->v_fs_e, vp->v_inode_nr, position, who_e,
+                   m_in.buffer, m_in.nbytes, &new_pos, &cum_io_incr);
+
+         if (r >= 0) {
+                if (ex64hi(new_pos))
+                        panic("read_write: bad new pos");
+
+                position = new_pos;
+                cum_io += cum_io_incr;
+        }
+
+
    printf("Metareading! \n\n");
    return(OK);
 }
@@ -37,6 +95,64 @@ PUBLIC int do_metaread(void){
                      do_metawrite
 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++=*/
 PUBLIC int do_metawrite(void){
+  register struct filp *f;
+  register struct vnode *vp;
+  u64_t position, res_pos, new_pos;
+  unsigned int cum_io, cum_io_incr, res_cum_io;
+  int op, oflags, r, block_spec, char_spec;
+  int regular;
+  mode_t mode_word;
+
+  /* If the file descriptor is valid, get the vnode, size and mode. */
+  if (m_in.nbytes < 0) return(EINVAL);
+  if ((f = get_filp(m_in.fd)) == NULL) return(err_code);
+  /*if (((f->filp_mode) & (rw_flag == READING ? R_BIT : W_BIT)) == 0) {
+        return(f->filp_mode == FILP_CLOSED ? EIO : EBADF);
+  }*/
+  if(m_in.nbytes == 0){
+     printf("Trying to read 0 bytes \n");
+     return(-1);
+  }
+
+  position = f->filp_pos;
+  oflags = f->filp_flags;
+  vp = f->filp_vno;
+  r = OK;
+  cum_io = 0;
+
+/*  if (vp->v_pipe == I_PIPE) {
+        if (fp->fp_cum_io_partial != 0) {
+                panic("read_write: fp_cum_io_partial not clear");
+        }
+        return rw_pipe(rw_flag, who_e, m_in.fd, f, m_in.buffer, m_in.nbytes);
+  }*/
+
+/*  op = (rw_flag == READING ? VFS_DEV_READ : VFS_DEV_WRITE);*/
+  mode_word = vp->v_mode & I_TYPE;
+  regular = mode_word == I_REGULAR;
+
+  if ((char_spec = (mode_word == I_CHAR_SPECIAL ? 1 : 0))) {
+        if (vp->v_sdev == NO_DEV)
+                panic("read_write tries to read from character device NO_DEV");
+  }
+
+  if ((block_spec = (mode_word == I_BLOCK_SPECIAL ? 1 : 0))) {
+        if (vp->v_sdev == NO_DEV)
+                panic("read_write tries to read from block device NO_DEV");
+  }
+
+  r = req_metawrite(vp->v_fs_e, vp->v_inode_nr, position, who_e,
+                   m_in.buffer, m_in.nbytes, &new_pos, &cum_io_incr);
+
+         if (r >= 0) {
+                if (ex64hi(new_pos))
+                        panic("read_write: bad new pos");
+
+                position = new_pos;
+                cum_io += cum_io_incr;
+        }
+
+
    printf("Metawriting! \n\n");
    return(OK);
 }

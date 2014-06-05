@@ -28,6 +28,99 @@ FORWARD _PROTOTYPE(int fs_sendrec_f, (char *file, int line, endpoint_t fs_e,
 				      message *reqm)			);
 
 #define fs_sendrec(e, m) fs_sendrec_f(__FILE__, __LINE__, (e), (m))
+/*===========================================================================*
+ *                              req_metaread                                *
+ *===========================================================================*/
+PUBLIC int req_metaread(fs_e, inode_nr, pos , user_e,
+        user_addr, num_of_bytes, new_posp, cum_iop)
+endpoint_t fs_e;
+ino_t inode_nr;
+u64_t pos;
+endpoint_t user_e;
+char *user_addr;
+unsigned int num_of_bytes;
+u64_t *new_posp;
+unsigned int *cum_iop;
+{
+  int r;
+  cp_grant_id_t grant_id;
+  message m;
+
+  if (ex64hi(pos) != 0)
+          panic("req_readwrite: pos too large");
+
+ /* grant_id = cpf_grant_magic(fs_e, user_e, (vir_bytes) user_addr, num_of_bytes,
+                             (rw_flag==READING ? CPF_WRITE:CPF_READ));*/
+  if (grant_id == -1)
+          panic("req_readwrite: cpf_grant_magic failed");
+
+  /* Fill in request message */
+  /*m.m_type = rw_flag == READING ? REQ_READ : REQ_WRITE;*/
+  m.REQ_INODE_NR = inode_nr;
+  m.REQ_GRANT = grant_id;
+  m.REQ_SEEK_POS_LO = ex64lo(pos);
+  m.REQ_SEEK_POS_HI = 0;        /* Not used for now, so clear it. */
+  m.REQ_NBYTES = num_of_bytes;
+
+  /* Send/rec request */
+  r = fs_sendrec(fs_e, &m);
+  cpf_revoke(grant_id);
+
+  if (r == OK) {
+        /* Fill in response structure */
+        *new_posp = cvul64(m.RES_SEEK_POS_LO);
+        *cum_iop = m.RES_NBYTES;
+  }
+
+  return(r);
+}
+
+/*===========================================================================*
+ *                              req_metawrite                                *
+ *===========================================================================*/
+PUBLIC int req_metawrite(fs_e, inode_nr, pos , user_e,
+        user_addr, num_of_bytes, new_posp, cum_iop)
+endpoint_t fs_e;
+ino_t inode_nr;
+u64_t pos;
+endpoint_t user_e;
+char *user_addr;
+unsigned int num_of_bytes;
+u64_t *new_posp;
+unsigned int *cum_iop;
+{
+  int r;
+  cp_grant_id_t grant_id;
+  message m;
+
+  if (ex64hi(pos) != 0)
+          panic("req_readwrite: pos too large");
+
+ /* grant_id = cpf_grant_magic(fs_e, user_e, (vir_bytes) user_addr, num_of_bytes,
+                             (rw_flag==READING ? CPF_WRITE:CPF_READ));*/
+  if (grant_id == -1)
+          panic("req_readwrite: cpf_grant_magic failed");
+
+  /* Fill in request message */
+  /*m.m_type = rw_flag == READING ? REQ_READ : REQ_WRITE;*/
+  m.REQ_INODE_NR = inode_nr;
+  m.REQ_GRANT = grant_id;
+  m.REQ_SEEK_POS_LO = ex64lo(pos);
+  m.REQ_SEEK_POS_HI = 0;        /* Not used for now, so clear it. */
+  m.REQ_NBYTES = num_of_bytes;
+
+  /* Send/rec request */
+  r = fs_sendrec(fs_e, &m);
+  cpf_revoke(grant_id);
+
+  if (r == OK) {
+        /* Fill in response structure */
+        *new_posp = cvul64(m.RES_SEEK_POS_LO);
+        *cum_iop = m.RES_NBYTES;
+  }
+
+  return(r);
+}
 
 
 /*===========================================================================*
