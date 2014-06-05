@@ -10,7 +10,7 @@ cp Makefile.inc /usr/src/lib/libc/posix
 cp lib.h /usr/src/include
 cp callnr.h /usr/src/include/minix
 cp read.c /usr/src/servers/vfs
-cp write.c /usr/src/servers/vfs
+cp write.c /usr/src/servers/mfs
 
 cd /usr/src/servers
 make install
