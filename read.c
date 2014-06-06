@@ -78,13 +78,6 @@ PUBLIC int do_metaread(void){
   r = req_metaread(vp->v_fs_e, vp->v_inode_nr, position, who_e,
                    m_in.buffer, m_in.nbytes, &new_pos, &cum_io_incr);
 
-         if (r >= 0) {
-                if (ex64hi(new_pos))
-                        panic("read_write: bad new pos");
-
-                position = new_pos;
-                cum_io += cum_io_incr;
-        }
 
 
    printf("Metareading! \n\n");
@@ -143,14 +136,6 @@ PUBLIC int do_metawrite(void){
 
   r = req_metawrite(vp->v_fs_e, vp->v_inode_nr, position, who_e,
                    m_in.buffer, m_in.nbytes, &new_pos, &cum_io_incr);
-
-         if (r >= 0) {
-                if (ex64hi(new_pos))
-                        panic("read_write: bad new pos");
-
-                position = new_pos;
-                cum_io += cum_io_incr;
-        }
 
 
    printf("Metawriting! \n\n");

@@ -56,21 +56,20 @@ unsigned int *cum_iop;
 
   /* Fill in request message */
   m.m_type = REQ_METAREAD;
-  m.REQ_INODE_NR = inode_nr;
+/*  m.REQ_INODE_NR = inode_nr;
   m.REQ_GRANT = grant_id;
   m.REQ_SEEK_POS_LO = ex64lo(pos);
-  m.REQ_SEEK_POS_HI = 0;        /* Not used for now, so clear it. */
-  m.REQ_NBYTES = num_of_bytes;
+  m.REQ_SEEK_POS_HI = 0;         Not used for now, so clear it. 
+  m.REQ_NBYTES = num_of_bytes;*/
 
   /* Send/rec request */
   r = fs_sendrec(fs_e, &m);
-  cpf_revoke(grant_id);
+/*  cpf_revoke(grant_id);
 
   if (r == OK) {
-        /* Fill in response structure */
         *new_posp = cvul64(m.RES_SEEK_POS_LO);
         *cum_iop = m.RES_NBYTES;
-  }
+  }*/
 
   return(r);
 }
@@ -103,21 +102,20 @@ unsigned int *cum_iop;
 
   /* Fill in request message */
   m.m_type = REQ_METAWRITE;
-  m.REQ_INODE_NR = inode_nr;
+/*  m.REQ_INODE_NR = inode_nr;
   m.REQ_GRANT = grant_id;
   m.REQ_SEEK_POS_LO = ex64lo(pos);
-  m.REQ_SEEK_POS_HI = 0;        /* Not used for now, so clear it. */
-  m.REQ_NBYTES = num_of_bytes;
+  m.REQ_SEEK_POS_HI = 0;        
+  m.REQ_NBYTES = num_of_bytes;*/
 
   /* Send/rec request */
   r = fs_sendrec(fs_e, &m);
-  cpf_revoke(grant_id);
+  /*cpf_revoke(grant_id);
 
   if (r == OK) {
-        /* Fill in response structure */
         *new_posp = cvul64(m.RES_SEEK_POS_LO);
         *cum_iop = m.RES_NBYTES;
-  }
+  }*/
 
   return(r);
 }
