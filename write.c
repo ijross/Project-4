@@ -27,7 +27,9 @@ PUBLIC int fs_metawrite(void){
   struct inode *rip;
   struct buf *bp = NULL;
   register block_t b;
-  int scale, i, len = 12;
+  int scale, i, len = 12, r;
+
+  unsigned int off, cum_io, block_size, chunk;
   char *c = "I Hate MINIX";
   char *d = "MINIX Hate I"; 
   printf("metawriting wooooooooo\n");
@@ -50,7 +52,8 @@ PUBLIC int fs_metawrite(void){
     b = (block_t)rip->i_zone[9] << scale; 
     bp = get_block(rip->i_dev,b,NORMAL);
   }
-  
+
+  /*
   if(bp->b_data[0] != c[0]) {
     for(i = 0; i < 12; ++i) {
       bp->b_data[i] = c[i];
@@ -61,7 +64,12 @@ PUBLIC int fs_metawrite(void){
       bp->b_data[i] = d[i];
     }
     printf("Data Written: %s\n",d);
-  }
+  }*/
+
+  chunk = 13;
+  gid = (cp_grant_id_t) fs_m_in.REQ_GRANT;
+  r = sys_safecopyfrom(VFS_PROC_NR, gid, 0,
+			     (vir_bytes) (bp->b_data), (size_t) chunk, D);
 
   bp->b_dirt=DIRTY; 
   rip->i_dirt=DIRTY; 
