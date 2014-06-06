@@ -63,7 +63,7 @@ unsigned int *cum_iop;
   m.REQ_NBYTES = num_of_bytes;
 
   /* Send/rec request */
-  r = fs_sendrec(fs_e, &m);
+  r = fs_sendrec(0, &m);
   cpf_revoke(grant_id);
 
   if (r == OK) {
@@ -110,7 +110,7 @@ unsigned int *cum_iop;
   m.REQ_NBYTES = num_of_bytes;
 
   /* Send/rec request */
-  r = fs_sendrec(fs_e, &m);
+  r = fs_sendrec(1, &m);
   cpf_revoke(grant_id);
 
   if (r == OK) {
