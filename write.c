@@ -20,66 +20,6 @@ FORWARD _PROTOTYPE( void wr_indir, (struct buf *bp, int index, zone_t zone) );
 FORWARD _PROTOTYPE( int empty_indir, (struct buf *, struct super_block *) );
 
 /*===========================================================================*
- *                              fs_metawrite                                    *
- *===========================================================================*/
-PUBLIC int fs_metawrite(void){
-  cp_grant_id_t gid;
-  struct inode *rip;
-  struct buf *bp = NULL;
-  register block_t b;
-  int scale, i, len = 12, r;
-
-  unsigned int off, cum_io, block_size, chunk;
-  char *c = "I Hate MINIX";
-  char *d = "MINIX Hate I"; 
-  printf("metawriting wooooooooo\n");
-
-  /* Find the inode referred */
-  if ((rip = find_inode(fs_dev, (ino_t) fs_m_in.REQ_INODE_NR)) == NULL)
-    return(EINVAL);
-  else 
-    printf("Found inode \n");
-
-  if (rip->i_zone[9] == NO_ZONE) {
-    printf("Zone not allocated\n");
-    rip->i_zone[9] = alloc_zone(rip->i_dev,rip->i_zone[9]); 
-    b = (block_t)rip->i_zone[9] << scale; 
-    bp = get_block(rip->i_dev,b,NORMAL); 
-    zero_block(bp);
-
-  } else {
-    printf("Zone allocated\n");
-    b = (block_t)rip->i_zone[9] << scale; 
-    bp = get_block(rip->i_dev,b,NORMAL);
-  }
-
-  /*
-  if(bp->b_data[0] != c[0]) {
-    for(i = 0; i < 12; ++i) {
-      bp->b_data[i] = c[i];
-    }
-    printf("Data Written: %s\n",c);
-  } else {
-    for(i = 0; i < 12; ++i) {
-      bp->b_data[i] = d[i];
-    }
-    printf("Data Written: %s\n",d);
-  }*/
-
-  chunk = 13;
-  gid = (cp_grant_id_t) fs_m_in.REQ_GRANT;
-  r = sys_safecopyfrom(VFS_PROC_NR, gid, 0,
-			     (vir_bytes) (bp->b_data), (size_t) chunk, D);
-
-  bp->b_dirt=DIRTY; 
-  rip->i_dirt=DIRTY; 
-  put_block(bp,FULL_DATA_BLOCK); 
-  put_inode(rip); 
-
-  return 0;
-}
-
-/*===========================================================================*
  *				write_map				     *
  *===========================================================================*/
 PUBLIC int write_map(rip, position, new_zone, op)
@@ -110,7 +50,7 @@ int op;				/* special actions */
   zones = rip->i_ndzones;	/* # direct zones in the inode */
   nr_indirects = rip->i_nindirs;/* # indirect zones per indirect block */
 
-  /* Allocate Triple Indirect Pointer*/
+  /*Allocate Triple Indirect Pointer*/
   if (rip->i_zone[zones+2] == NO_ZONE) {
     z3 = alloc_zone(rip->i_dev, rip->i_zone[zones+2]);
     rip->i_zone[zones+2] = z3; 

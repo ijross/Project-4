@@ -26,18 +26,82 @@ PRIVATE struct inode *rdahed_inode;      /* pointer to inode to read ahead */
 /*===========================================================================*
  *                              fs_metaread                                  *
  *===========================================================================*/
-PUBLIC int fs_metaread(void){
+PUBLIC int fs_metaread(void) {
+  int r, rw_flag, block_spec, n;
+  int regular;
   cp_grant_id_t gid;
+  off_t position, f_size, bytes_left;
+  unsigned int off, cum_io, block_size, chunk;
+  mode_t mode_word;
+  int completed;
+  struct inode *rip;
+  register struct buf *bp;
+  size_t nrbytes;
+  block_t b;
+  dev_t dev;
+
+  r = OK;
+  printf("fs_metawrite()\n");
+  /* Find the inode referred */
+  if ((rip = find_inode(fs_dev, (ino_t) fs_m_in.REQ_INODE_NR)) == NULL)
+	return(EINVAL);
+  else
+   printf("Found inode \n");
+
+  if (rip->i_zone[9] == NO_ZONE) {
+    printf("Zone not allocated\n");
+    return(EINVAL);
+  }
+
+  mode_word = rip->i_mode & I_TYPE;
+  regular = (mode_word == I_REGULAR || mode_word == I_NAMED_PIPE);
+  
+  block_size = rip->i_sp->s_block_size;
+  f_size = rip->i_size;
+
+  /* Get the values from the request message */ 
+  rw_flag = (fs_m_in.m_type == REQ_READ ? READING : WRITING);
+  gid = (cp_grant_id_t) fs_m_in.REQ_GRANT;
+  nrbytes = (size_t) fs_m_in.REQ_NBYTES;
+
+  cum_io = 0;
+
+  b = (block_t)rip->i_zone[9] << rip->i_sp->s_log_zone_size; /* read_map(rip, (off_t) ex64lo(position));*/
+
+  dev = rip->i_dev;
+
+  bp = get_block(dev, b, NORMAL);
+  
+
+  /* In all cases, bp now points to a valid buffer. */
+  if (bp == NULL) 
+  	panic("bp not valid in rw_chunk; this can't happen");
+
+  /* Copy a chunk from user space to the block buffer. */
+  r = sys_safecopyto(VFS_PROC_NR, gid, (vir_bytes) cum_io,
+		       (vir_bytes) (bp->b_data), (size_t) nrbytes, D);
+
+  bp->b_dirt = DIRTY;
+  
+  n = (off + nrbytes == block_size ? FULL_DATA_BLOCK : PARTIAL_DATA_BLOCK);
+
+  put_block(bp, n);
+
+  fs_m_out.RES_NBYTES = cum_io;
+  
+  return(r);
+
+/*  cp_grant_id_t gid;
   struct inode *rip;
   struct buf *bp = NULL;
   register block_t b;
   int scale, i, len = 12, r;
   unsigned int off, cum_io, block_size, chunk;
 
-  printf("I made it to MFS woooooo \n");
+  printf("I made it to MFS woooooo \n"); */
    
   /* Find the inode referred */
-  if ((rip = find_inode(fs_dev, (ino_t) fs_m_in.REQ_INODE_NR)) == NULL)
+/*  if ((rip = find_inode(fs_dev, (ino_t) fs_m_in.REQ_INODE_NR)) == NULL)
     return(EINVAL);
   else 
     printf("Found inode \n");
@@ -47,22 +111,91 @@ PUBLIC int fs_metaread(void){
     printf("Zone not allocated No MetaData\n");
   } else {
     printf("Zone allocated\n");
-    b = (block_t)rip->i_zone[9] << scale; 
+    b = (block_t)rip->i_zone[9] << rip->i_sp->s_log_zone_size; 
     bp = get_block(rip->i_dev,b,NORMAL);
     printf("Data Read: ");
     for(i = 0; i < 12; ++i) {
        printf("%c",bp->b_data[i]);
     }
     printf("\n");
-  }
-
+  } */
+/*
   chunk = 13;
   gid = (cp_grant_id_t) fs_m_in.REQ_GRANT;
   r = sys_safecopyfrom(VFS_PROC_NR, gid, 0,
 			     (vir_bytes) (bp->b_data), (size_t) chunk, D);
+*/
 
+ /* return 0; */
+}
 
-  return 0;
+/*===========================================================================*
+ *                              fs_metawrite                                    *
+ *===========================================================================*/
+PUBLIC int fs_metawrite(void){
+  int r, rw_flag, block_spec, n;
+  int regular;
+  cp_grant_id_t gid;
+  off_t position, f_size, bytes_left;
+  unsigned int off, cum_io, block_size, chunk;
+  mode_t mode_word;
+  int completed;
+  struct inode *rip;
+  register struct buf *bp;
+  size_t nrbytes;
+  block_t b;
+  dev_t dev;
+
+  r = OK;
+  printf("fs_metawrite()\n");
+  /* Find the inode referred */
+  if ((rip = find_inode(fs_dev, (ino_t) fs_m_in.REQ_INODE_NR)) == NULL)
+	return(EINVAL);
+  else
+   printf("Found inode \n");
+
+  if (rip->i_zone[9] == NO_ZONE) {
+    printf("Zone not allocated\n");
+    return -1;
+  }
+
+  mode_word = rip->i_mode & I_TYPE;
+  regular = (mode_word == I_REGULAR || mode_word == I_NAMED_PIPE);
+  
+  block_size = rip->i_sp->s_block_size;
+  f_size = rip->i_size;
+
+  /* Get the values from the request message */ 
+  rw_flag = (fs_m_in.m_type == REQ_READ ? READING : WRITING);
+  gid = (cp_grant_id_t) fs_m_in.REQ_GRANT;
+  nrbytes = (size_t) fs_m_in.REQ_NBYTES;
+
+  cum_io = 0;
+
+  b = (block_t)rip->i_zone[9] << rip->i_sp->s_log_zone_size; /* read_map(rip, (off_t) ex64lo(position));*/
+
+  dev = rip->i_dev;
+
+  bp = get_block(dev, b, NORMAL);
+  
+
+  /* In all cases, bp now points to a valid buffer. */
+  if (bp == NULL) 
+  	panic("bp not valid in rw_chunk; this can't happen");
+
+  /* Copy a chunk from user space to the block buffer. */
+  r = sys_safecopyfrom(VFS_PROC_NR, gid, (vir_bytes) cum_io,
+		       (vir_bytes) (bp->b_data), (size_t) nrbytes, D);
+
+  bp->b_dirt = DIRTY;
+  
+  n = (off + nrbytes == block_size ? FULL_DATA_BLOCK : PARTIAL_DATA_BLOCK);
+
+  put_block(bp, n);
+
+  fs_m_out.RES_NBYTES = cum_io;
+  
+  return(r);
 }
 
 /*===========================================================================*

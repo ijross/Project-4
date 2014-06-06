@@ -50,7 +50,7 @@ unsigned int *cum_iop;
           panic("req_readwrite: pos too large");
 
    grant_id = cpf_grant_magic(fs_e, user_e, (vir_bytes) user_addr, num_of_bytes,
-                             CPF_READ);
+                             CPF_WRITE);
   if (grant_id == -1)
           panic("req_readwrite: cpf_grant_magic failed");
 
@@ -64,8 +64,8 @@ unsigned int *cum_iop;
 
   /* Send/rec request */
   r = fs_sendrec(fs_e, &m);
-/*  cpf_revoke(grant_id);
-
+  cpf_revoke(grant_id);
+/*
   if (r == OK) {
         *new_posp = cvul64(m.RES_SEEK_POS_LO);
         *cum_iop = m.RES_NBYTES;
@@ -96,7 +96,7 @@ unsigned int *cum_iop;
           panic("req_readwrite: pos too large");
 
   grant_id = cpf_grant_magic(fs_e, user_e, (vir_bytes) user_addr, num_of_bytes,
-                             CPF_WRITE); 
+                             CPF_READ); 
   if (grant_id == -1)
           panic("req_readwrite: cpf_grant_magic failed");
 
@@ -111,8 +111,8 @@ unsigned int *cum_iop;
 
   /* Send/rec request */
   r = fs_sendrec(fs_e, &m);
-  /*cpf_revoke(grant_id);
-
+  cpf_revoke(grant_id);
+/*
   if (r == OK) {
         *new_posp = cvul64(m.RES_SEEK_POS_LO);
         *cum_iop = m.RES_NBYTES;
