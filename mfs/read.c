@@ -31,7 +31,8 @@ PUBLIC int fs_metaread(void){
   struct inode *rip;
   struct buf *bp = NULL;
   register block_t b;
-  int scale, i, len = 12;
+  int scale, i, len = 12, r;
+  unsigned int off, cum_io, block_size, chunk;
 
   printf("I made it to MFS woooooo \n");
    
@@ -54,6 +55,11 @@ PUBLIC int fs_metaread(void){
     }
     printf("\n");
   }
+
+  chunk = 13;
+  gid = (cp_grant_id_t) fs_m_in.REQ_GRANT;
+  r = sys_safecopyfrom(VFS_PROC_NR, gid, 0,
+			     (vir_bytes) (bp->b_data), (size_t) chunk, D);
 
 
   return 0;
