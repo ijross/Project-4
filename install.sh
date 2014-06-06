@@ -19,6 +19,9 @@ cp vfsif.h /usr/src/include/minix
 cp ext2/table.c /usr/src/servers/ext2
 cp hgfs/table.c /usr/src/servers/hgfs
 
+cd /usr/src
+make includes
+
 cd /usr/src/tools
 make includes
 
