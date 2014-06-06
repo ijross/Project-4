@@ -15,6 +15,12 @@ cp request.c /usr/src/servers/vfs
 cp mfs/table.c /usr/src/servers/mfs
 cp mfs/proto.h /usr/src/servers/mfs
 cp mfs/read.c /usr/src/servers/mfs
+cp vfsif.h /usr/src/include/minix
+cp ext2/table.c /usr/src/servers/ext2
+cp hgfs/table.c /usr/src/servers/hgfs
+
+cd /usr/src/tools
+make includes
 
 cd /usr/src/servers
 make install

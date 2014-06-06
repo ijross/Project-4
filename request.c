@@ -55,7 +55,7 @@ unsigned int *cum_iop;
           panic("req_readwrite: cpf_grant_magic failed");
 
   /* Fill in request message */
-  /*m.m_type = rw_flag == READING ? REQ_READ : REQ_WRITE;*/
+  m.m_type = REQ_METAREAD;
   m.REQ_INODE_NR = inode_nr;
   m.REQ_GRANT = grant_id;
   m.REQ_SEEK_POS_LO = ex64lo(pos);
@@ -63,7 +63,7 @@ unsigned int *cum_iop;
   m.REQ_NBYTES = num_of_bytes;
 
   /* Send/rec request */
-  r = fs_sendrec(0, &m);
+  r = fs_sendrec(fs_e, &m);
   cpf_revoke(grant_id);
 
   if (r == OK) {
@@ -102,7 +102,7 @@ unsigned int *cum_iop;
           panic("req_readwrite: cpf_grant_magic failed");
 
   /* Fill in request message */
-  /*m.m_type = rw_flag == READING ? REQ_READ : REQ_WRITE;*/
+  m.m_type = REQ_METAWRITE;
   m.REQ_INODE_NR = inode_nr;
   m.REQ_GRANT = grant_id;
   m.REQ_SEEK_POS_LO = ex64lo(pos);
@@ -110,7 +110,7 @@ unsigned int *cum_iop;
   m.REQ_NBYTES = num_of_bytes;
 
   /* Send/rec request */
-  r = fs_sendrec(1, &m);
+  r = fs_sendrec(fs_e, &m);
   cpf_revoke(grant_id);
 
   if (r == OK) {

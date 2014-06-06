@@ -19,6 +19,12 @@
 FORWARD _PROTOTYPE( void wr_indir, (struct buf *bp, int index, zone_t zone) );
 FORWARD _PROTOTYPE( int empty_indir, (struct buf *, struct super_block *) );
 
+/*===========================================================================*
+ *                              fs_metawrite                                    *
+ *===========================================================================*/
+PUBLIC int fs_metawrite(void){
+   printf("metawriting wooooooooo\n");
+}
 
 /*===========================================================================*
  *				write_map				     *
