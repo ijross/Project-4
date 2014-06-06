@@ -60,7 +60,7 @@ unsigned int *cum_iop;
 /*  m.REQ_GRANT = grant_id;
   m.REQ_SEEK_POS_LO = ex64lo(pos);
   m.REQ_SEEK_POS_HI = ex64hi(pos);    NOT SURE IF WE NEED THIS JESSe */
-/*  m.REQ_NBYTES = num_of_bytes; */
+  m.REQ_NBYTES = num_of_bytes; 
 
   /* Send/rec request */
   r = fs_sendrec(fs_e, &m);
@@ -106,7 +106,7 @@ unsigned int *cum_iop;
   /*m.REQ_GRANT = grant_id;
   m.REQ_SEEK_POS_LO = ex64lo(pos);
   m.REQ_SEEK_POS_HI = ex64hi(pos); */
-  /*m.REQ_NBYTES = num_of_bytes; */
+  m.REQ_NBYTES = num_of_bytes; 
 
 
   /* Send/rec request */
