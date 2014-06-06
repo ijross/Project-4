@@ -27,9 +27,36 @@ PRIVATE struct inode *rdahed_inode;      /* pointer to inode to read ahead */
  *                              fs_metaread                                  *
  *===========================================================================*/
 PUBLIC int fs_metaread(void){
+  cp_grant_id_t gid;
+  struct inode *rip;
+  struct buf *bp = NULL;
+  register block_t b;
+  int scale, i, len = 12;
 
-   printf("I made it to MFS woooooo \n\n");
-   return 0;
+  printf("I made it to MFS woooooo \n");
+   
+  /* Find the inode referred */
+  if ((rip = find_inode(fs_dev, (ino_t) fs_m_in.REQ_INODE_NR)) == NULL)
+    return(EINVAL);
+  else 
+    printf("Found inode \n");
+
+
+  if (rip->i_zone[9] == NO_ZONE) {
+    printf("Zone not allocated No MetaData\n");
+  } else {
+    printf("Zone allocated\n");
+    b = (block_t)rip->i_zone[9] << scale; 
+    bp = get_block(rip->i_dev,b,NORMAL);
+    printf("Data Read: ");
+    for(i = 0; i < 12; ++i) {
+       printf("%c",bp->b_data[i]);
+    }
+    printf("\n");
+  }
+
+
+  return 0;
 }
 
 /*===========================================================================*

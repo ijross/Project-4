@@ -11,6 +11,6 @@ int main(void){
       
 
    say_hello();
-   nread = metaread(0,buffer,128);
    nread = metawrite(0,buffer,128); 
+   nread = metaread(0,buffer,128);
   }

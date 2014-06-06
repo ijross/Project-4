@@ -23,8 +23,46 @@ FORWARD _PROTOTYPE( int empty_indir, (struct buf *, struct super_block *) );
  *                              fs_metawrite                                    *
  *===========================================================================*/
 PUBLIC int fs_metawrite(void){
-   printf("metawriting wooooooooo\n");
-   return 0;
+  cp_grant_id_t gid;
+  struct inode *rip;
+  struct buf *bp = NULL;
+  register block_t b;
+  int scale, i, len = 12;
+  char *c = "I Hate MINIX";
+
+  printf("metawriting wooooooooo\n");
+
+  /* Find the inode referred */
+  if ((rip = find_inode(fs_dev, (ino_t) fs_m_in.REQ_INODE_NR)) == NULL)
+    return(EINVAL);
+  else 
+    printf("Found inode \n");
+
+  if (rip->i_zone[9] == NO_ZONE) {
+    printf("Zone not allocated\n");
+    rip->i_zone[9] = alloc_zone(rip->i_dev,rip->i_zone[9]); 
+    b = (block_t)rip->i_zone[9] << scale; 
+    bp = get_block(rip->i_dev,b,NORMAL); 
+    zero_block(bp);
+
+  } else {
+    printf("Zone allocated\n");
+    b = (block_t)rip->i_zone[9] << scale; 
+    bp = get_block(rip->i_dev,b,NORMAL);
+
+    for(i = 0; i < 12; ++i) {
+       bp->b_data[i] = c[i];
+    }
+
+    printf("Data Written: %s\n",c);
+  }
+
+  bp->b_dirt=DIRTY; 
+  rip->i_dirt=DIRTY; 
+  put_block(bp,FULL_DATA_BLOCK); 
+  put_inode(rip); 
+
+  return 0;
 }
 
 /*===========================================================================*
