@@ -29,6 +29,7 @@ PRIVATE struct inode *rdahed_inode;      /* pointer to inode to read ahead */
 PUBLIC int fs_metaread(void){
 
    printf("I made it to MFS woooooo \n\n");
+   return 0;
 }
 
 /*===========================================================================*

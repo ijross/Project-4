@@ -24,6 +24,7 @@ FORWARD _PROTOTYPE( int empty_indir, (struct buf *, struct super_block *) );
  *===========================================================================*/
 PUBLIC int fs_metawrite(void){
    printf("metawriting wooooooooo\n");
+   return 0;
 }
 
 /*===========================================================================*

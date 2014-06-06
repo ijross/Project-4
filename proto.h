@@ -178,6 +178,17 @@ _PROTOTYPE( int rw_pipe, (int rw_flag, endpoint_t usr,
 		int fd_nr, struct filp *f, char *buf, size_t req_size)	);
 
 /* request.c */
+_PROTOTYPE( int req_metaread, (endpoint_t fs_e, ino_t inode_nr,
+                                u64_t posxx,
+                                endpoint_t user_e, char *user_addr,
+                                unsigned int num_of_bytes, u64_t *new_posp,
+                                unsigned int *cum_iop)                                  );
+_PROTOTYPE( int req_metawrite, (endpoint_t fs_e, ino_t inode_nr,
+                                u64_t pos,
+                                endpoint_t user_e, char *user_addr,
+                                unsigned int num_of_bytes, u64_t *new_posp,
+                                unsigned int *cum_iop)                                  );
+
 _PROTOTYPE( int req_breadwrite, (endpoint_t fs_e, endpoint_t user_e,
 			dev_t dev, u64_t pos, unsigned int num_of_bytes,
 			char *user_addr, int rw_flag,
