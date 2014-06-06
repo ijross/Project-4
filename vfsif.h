@@ -38,7 +38,6 @@
 #define REQ_TRC_START_LO	m9_l3
 #define REQ_UCRED_SIZE		m9_s4 
 #define REQ_UID			m9_s4
-#define REQ_METADATA            m9_s5
 
 /* VFS/FS reply fields */
 #define RES_DEV			m9_l4

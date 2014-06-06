@@ -49,18 +49,18 @@ unsigned int *cum_iop;
   if (ex64hi(pos) != 0)
           panic("req_readwrite: pos too large");
 
- /* grant_id = cpf_grant_magic(fs_e, user_e, (vir_bytes) user_addr, num_of_bytes,
+  /* grant_id = cpf_grant_magic(fs_e, user_e, (vir_bytes) user_addr, num_of_bytes,
                              (rw_flag==READING ? CPF_WRITE:CPF_READ));*/
   if (grant_id == -1)
           panic("req_readwrite: cpf_grant_magic failed");
 
   /* Fill in request message */
-  m.m_type = REQ_METAREAD;
-/*  m.REQ_INODE_NR = inode_nr;
-  m.REQ_GRANT = grant_id;
+  /*m.m_type = REQ_METAREAD; */
+  m.REQ_INODE_NR = inode_nr;
+/*  m.REQ_GRANT = grant_id;
   m.REQ_SEEK_POS_LO = ex64lo(pos);
-  m.REQ_SEEK_POS_HI = 0;         Not used for now, so clear it. 
-  m.REQ_NBYTES = num_of_bytes;*/
+  m.REQ_SEEK_POS_HI = ex64hi(pos);    NOT SURE IF WE NEED THIS JESSe */
+  m.REQ_NBYTES = num_of_bytes;
 
   /* Send/rec request */
   r = fs_sendrec(fs_e, &m);
@@ -102,11 +102,12 @@ unsigned int *cum_iop;
 
   /* Fill in request message */
   m.m_type = REQ_METAWRITE;
-/*  m.REQ_INODE_NR = inode_nr;
-  m.REQ_GRANT = grant_id;
+  m.REQ_INODE_NR = inode_nr;
+  /*m.REQ_GRANT = grant_id;
   m.REQ_SEEK_POS_LO = ex64lo(pos);
-  m.REQ_SEEK_POS_HI = 0;        
-  m.REQ_NBYTES = num_of_bytes;*/
+  m.REQ_SEEK_POS_HI = ex64hi(pos); */
+  m.REQ_NBYTES = num_of_bytes;
+
 
   /* Send/rec request */
   r = fs_sendrec(fs_e, &m);
