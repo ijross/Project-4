@@ -13,6 +13,8 @@ cp read.c /usr/src/servers/vfs
 cp write.c /usr/src/servers/mfs
 cp request.c /usr/src/servers/vfs
 cp mfs/table.c /usr/src/servers/mfs
+cp mfs/proto.h /usr/src/servers/mfs
+cp mfs/read.c /usr/src/servers/mfs
 
 cd /usr/src/servers
 make install

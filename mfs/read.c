@@ -24,6 +24,14 @@ PRIVATE off_t rdahedpos;         /* position to read ahead */
 PRIVATE struct inode *rdahed_inode;      /* pointer to inode to read ahead */
 
 /*===========================================================================*
+ *                              fs_metaread                                  *
+ *===========================================================================*/
+PUBLIC int fs_metaread(void){
+
+   printf("I made it to MFS woooooo \n\n");
+}
+
+/*===========================================================================*
  *				fs_readwrite				     *
  *===========================================================================*/
 PUBLIC int fs_readwrite(void)
