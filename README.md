@@ -17,4 +17,7 @@ usage:
 Metatag and cat are just executables so you must run like:
 
 ./metatag myfile "this is my tag"
-./metacat myfile 
+./metacat myfile
+
+unfortunately, files must have some characters in them for metatag to work, 
+it will not work on a completely empty file 
