@@ -1,14 +1,20 @@
-CC        = cc
-CSOURCE   = test.c
-EXECBIN   = hello 
+CC         = cc
+CATSOURCE   = metacat.c
+CATEXECBIN  = metacat
 
-all : ${EXECBIN}
+TAGSOURCE   = metatag.c
+TAGEXECBIN  = metatag 
 
-${EXECBIN} : ${CSOURCE:.c=.o}
-	${CC} -o  $@ ${CSOURCE:.c=.o} 
+all : ${CATEXECBIN} ${TAGEXECBIN}
+
+${CATEXECBIN} : ${CATSOURCE:.c=.o}
+	${CC} -o  $@ ${CATSOURCE:.c=.o} 
+
+${TAGEXECBIN} : ${TAGSOURCE:.c=.o}
+	${CC} -o  $@ ${TAGSOURCE:.c=.o} 
 
 %.o : %.c
 	${CC} -c  $<
 
 clean:
-	-rm ${CSOURCE:.c=.o} ${EXECBIN}
+	-rm ${CATSOURCE:.c=.o} ${TAGSOURCE:.c=.o} ${CATEXECBIN} ${TAGEXECBIN}
