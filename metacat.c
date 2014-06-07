@@ -22,14 +22,14 @@ int main(int argc, char **argv){
    /* Check for sticky bit */
    stat(argv[1], &stats);
    if(!((01000) & stats.st_mode)) {
-      printf("No sticky Bit No meta file\n");   
+      printf(" No meta file associated with file\n");   
       return 0;
    }
      
    nread = metaread(fd,out,128);
 
    if(nread == -1) {
-     printf("File does not store MetaData old file system\n");
+     printf("Files of old filesystem cannot store metadata :(\n");
    } else {
       printf("%s\n", out);
    }   
