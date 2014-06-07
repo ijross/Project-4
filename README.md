@@ -20,4 +20,6 @@ Metatag and cat are just executables so you must run like:
 ./metacat myfile
 
 unfortunately, files must have some characters in them for metatag to work, 
-it will not work on a completely empty file 
+it will not work on a completely empty file
+
+we have included a testing script call metatest.sh for the user to try 
