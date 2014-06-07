@@ -34,4 +34,4 @@ make install
 cd /usr/src/lib/libc
 make install
 
-
+make
