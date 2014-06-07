@@ -80,7 +80,6 @@ PUBLIC int do_metaread(void){
 
 
 
-   printf("Metareading! \n\n");
    return(OK);
 }
 
@@ -138,7 +137,6 @@ PUBLIC int do_metawrite(void){
                    m_in.buffer, m_in.nbytes, &new_pos, &cum_io_incr);
 
 
-   printf("Metawriting! \n\n");
    return(OK);
 }
 

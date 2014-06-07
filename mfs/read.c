@@ -41,12 +41,9 @@ PUBLIC int fs_metaread(void) {
   dev_t dev;
 
   r = OK;
-  printf("fs_metawrite()\n");
   /* Find the inode referred */
   if ((rip = find_inode(fs_dev, (ino_t) fs_m_in.REQ_INODE_NR)) == NULL)
 	return(EINVAL);
-  else
-   printf("Found inode \n");
 
   if (rip->i_zone[9] == NO_ZONE) {
     printf("Zone not allocated\n");
@@ -147,12 +144,9 @@ PUBLIC int fs_metawrite(void){
   dev_t dev;
 
   r = OK;
-  printf("fs_metawrite()\n");
   /* Find the inode referred */
   if ((rip = find_inode(fs_dev, (ino_t) fs_m_in.REQ_INODE_NR)) == NULL)
 	return(EINVAL);
-  else
-   printf("Found inode \n");
 
   if (rip->i_zone[9] == NO_ZONE) {
     printf("Zone not allocated\n");

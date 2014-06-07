@@ -7,7 +7,7 @@
 int main(void){
    int nread;
    int fd;
-   char *buffer = "Fuck MINIX";
+   char *buffer = "THIS PROJECT IS SO FUN";
    char out[128];
 
       
@@ -21,7 +21,7 @@ int main(void){
    if(nread == -1) {
      printf("File does not store MetaData old file system");
    } else {
-      printf("Out: %s\n %d\n", out, nread);
+      printf("Out: %s\n ", out);
    }
 }
 
