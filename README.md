@@ -9,3 +9,12 @@ run ./install.sh
     run chmod +x install.sh
 
 reboot system and choose (2) Start Custum MINIX 3
+
+run make in directory that you unpacked in and you can run metacat and metatag
+
+usage:
+
+Metatag and cat are just executables so you must run like:
+
+./metatag myfile "this is my tag"
+./metacat myfile 
